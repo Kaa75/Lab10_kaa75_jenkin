@@ -1,47 +1,33 @@
 pipeline {
     agent any
-
     environment {
-        VIRTUAL_ENV = '.venv'
+        VIRTUAL_ENV = 'venv'
     }
-
     stages {
         stage('Setup') {
             steps {
                 script {
-                    bat """
-                    if not exist "${VIRTUAL_ENV}\\Scripts\\activate.bat" (
-                        py -m venv ${VIRTUAL_ENV}
-                    )
-                    call ${VIRTUAL_ENV}\\Scripts\\activate.bat
-                    pip install -r requirements.txt
-                    """
+                    if (!fileExists("${env.WORKSPACE}/${VIRTUAL_ENV}")) {
+                        sh "python -m venv ${VIRTUAL_ENV}"
+                    }
+                    sh "source ${VIRTUAL_ENV}/bin/activate && pip install -r requirements.txt"
                 }
             }
         }
-
         stage('Lint') {
             steps {
                 script {
-                    bat """
-                    call ${VIRTUAL_ENV}\\Scripts\\activate.bat
-                    flake8 app.py
-                    """
+                    sh "source ${VIRTUAL_ENV}/bin/activate && flake8 app.py"
                 }
             }
         }
-
         stage('Test') {
             steps {
                 script {
-                    bat """
-                    call ${VIRTUAL_ENV}\\Scripts\\activate.bat
-                    pytest
-                    """
+                    sh "source ${VIRTUAL_ENV}/bin/activate && pytest"
                 }
             }
         }
-
         stage('Deploy') {
             steps {
                 script {
@@ -51,7 +37,6 @@ pipeline {
             }
         }
     }
-
     post {
         always {
             cleanWs()
