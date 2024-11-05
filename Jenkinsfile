@@ -1,3 +1,4 @@
+// filepath: /c:/Users/karim/OneDrive/Desktop/University/eece_435L/Lab10/Jenkinsfile
 pipeline {
     agent any
     environment {
@@ -8,7 +9,7 @@ pipeline {
             steps {
                 script {
                     if (!fileExists("${env.WORKSPACE}\\${VIRTUAL_ENV}")) {
-                        bat "python -m venv ${VIRTUAL_ENV}"
+                        bat "py -m venv ${VIRTUAL_ENV}"
                     }
                     bat """
                     call ${VIRTUAL_ENV}\\Scripts\\activate.bat
