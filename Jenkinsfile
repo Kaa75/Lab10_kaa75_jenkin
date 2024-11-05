@@ -10,12 +10,12 @@ pipeline {
             steps {
                 script {
                     // Create virtual environment if it doesn't exist
-                    if (!fileExists("${env.WORKSPACE}/${VIRTUAL_ENV}")) {
-                        sh "py -m venv ${VIRTUAL_ENV}"
+                    if (!fileExists("${env.WORKSPACE}\\${VIRTUAL_ENV}")) {
+                        bat "py -m venv ${VIRTUAL_ENV}"
                     }
                     // Install requirements
-                    sh """
-                    source ${VIRTUAL_ENV}/bin/activate
+                    bat """
+                    call ${VIRTUAL_ENV}\\Scripts\\activate.bat
                     pip install -r requirements.txt
                     """
                 }
@@ -25,8 +25,8 @@ pipeline {
         stage('Lint') {
             steps {
                 script {
-                    sh """
-                    source ${VIRTUAL_ENV}/bin/activate
+                    bat """
+                    call ${VIRTUAL_ENV}\\Scripts\\activate.bat
                     flake8 app.py
                     """
                 }
@@ -36,8 +36,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh """
-                    source ${VIRTUAL_ENV}/bin/activate
+                    bat """
+                    call ${VIRTUAL_ENV}\\Scripts\\activate.bat
                     pytest
                     """
                 }
