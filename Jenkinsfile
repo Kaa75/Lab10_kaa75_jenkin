@@ -11,7 +11,7 @@ pipeline {
                 script {
                     // Create virtual environment if it doesn't exist
                     if (!fileExists("${env.WORKSPACE}/${VIRTUAL_ENV}")) {
-                        sh "python -m venv ${VIRTUAL_ENV}"
+                        sh "py -m venv ${VIRTUAL_ENV}"
                     }
                     // Install requirements
                     sh """
